@@ -9,10 +9,18 @@ public class OrderlyHashSet<E> implements Set<E>{
 
     private static class SetItem<E> implements Comparable<E> {
         private E data;
+        private int hashValue;
+
+        private SetItem(E elt)
+        {
+            hashValue = elt.hashCode();
+            data = elt;
+        }
+
 
         @Override
         public int compareTo(E o) {
-            return 0;
+            return hashValue;
         }
     }
 
