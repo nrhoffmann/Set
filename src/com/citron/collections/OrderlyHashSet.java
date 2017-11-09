@@ -1,5 +1,6 @@
 package com.citron.collections;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
@@ -7,10 +8,18 @@ import java.util.Set;
 public class OrderlyHashSet<E> implements Set<E>{
 
     private static class SetItem<E> implements Comparable<E> {
+        private E data;
+
         @Override
         public int compareTo(E o) {
             return 0;
         }
+    }
+
+    private ArrayList<SetItem<E>> backingArr;
+
+    OrderlyHashSet() {
+        backingArr = new ArrayList<>();
     }
 
     @Override
