@@ -26,7 +26,7 @@ public class OrderlyHashSet<E> implements Set<E>{
 
     private ArrayList<SetItem<E>> backingArr;
 
-    OrderlyHashSet() {
+    public OrderlyHashSet() {
         backingArr = new ArrayList<>();
     }
 
