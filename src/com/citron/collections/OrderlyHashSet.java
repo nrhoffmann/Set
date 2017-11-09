@@ -41,9 +41,9 @@ public class OrderlyHashSet<E> implements Set<E>{
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public boolean contains(Object o) {
-
-        return false;
+        return potentialInsertionPoint(new SetItem<>((E) o)) == -1;
     }
 
     @Override
@@ -65,18 +65,25 @@ public class OrderlyHashSet<E> implements Set<E>{
 
     @Override
     public Object[] toArray() {
-        return new Object[0];
+        return toArray(new Object[size()]);
     }
 
     @Override
-    public <T> T[] toArray(T[] a) {
-        return null;
+    @SuppressWarnings("unchecked")
+    public <T> T[] toArray(T[] arr) {
+        if (arr.length < size())
+            arr = Arrays.copyOf(arr, size());
+
+        int i = 0;
+        for (E e : this) arr[i++] = (T) e;
+
+        return arr;
     }
 
     @Override
     public boolean add(E elt) {
         SetItem<E> setItem = new SetItem<>(elt);
-        int i = potentialIndexOf(setItem);
+        int i = potentialInsertionPoint(setItem);
 
         if (i < 0) return false;
 
@@ -84,9 +91,9 @@ public class OrderlyHashSet<E> implements Set<E>{
         return true;
     }
 
-    private int potentialIndexOf(SetItem<E> setItem) {
+    private int potentialInsertionPoint(SetItem<E> setItem) {
         int binarySearchFeedbackVal = Collections.binarySearch(backingArr, setItem);
-        return binarySearchFeedbackVal >= 0 ? -1 : -binarySearchFeedbackVal + 1;
+        return binarySearchFeedbackVal >= 0 ? -1 : -(binarySearchFeedbackVal + 1);
     }
 
     @Override
