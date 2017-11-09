@@ -7,7 +7,7 @@ public class OrderlyHashSetTest {
     @Test
     public void iterationTest()
     {
-        OrderlyHashSet<String> testSet = new OrderlyHashSetTest<String>();
+        OrderlyHashSet<String> testSet = new OrderlyHashSetTest<>();
     }
 
 }
