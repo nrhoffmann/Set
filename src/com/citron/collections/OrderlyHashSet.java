@@ -2,8 +2,18 @@ package com.citron.collections;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Set;
 
-public class Set<E> implements java.util.Set<E>{
+public class OrderlyHashSet<E> implements Set<E>{
+
+    private static class Item<E> implements Comparable<E> {
+    private static class SetItem<E> implements Comparable<E> {
+        @Override
+        public int compareTo(E o) {
+            return 0;
+        }
+    }
+
     @Override
     public int size() {
         return 0;
