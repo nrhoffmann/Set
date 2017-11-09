@@ -6,7 +6,6 @@ import java.util.Set;
 
 public class OrderlyHashSet<E> implements Set<E>{
 
-    private static class Item<E> implements Comparable<E> {
     private static class SetItem<E> implements Comparable<E> {
         @Override
         public int compareTo(E o) {
