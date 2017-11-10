@@ -41,7 +41,6 @@ public class OrderlyHashSet<E> implements Set<E>{
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public boolean contains(Object o) {
 
 
@@ -118,6 +117,7 @@ public class OrderlyHashSet<E> implements Set<E>{
 
     @Override
     public boolean addAll(Collection<? extends E> c) {
+        backingAL.ensureCapacity(c.size());
         for(E elt: c)
         {
             add(elt);
