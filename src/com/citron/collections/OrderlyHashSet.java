@@ -118,7 +118,11 @@ public class OrderlyHashSet<E> implements Set<E>{
 
     @Override
     public boolean addAll(Collection<? extends E> c) {
-        return false;
+        for(E elt: c)
+        {
+            add(elt);
+        }
+        return true;
     }
 
     @Override

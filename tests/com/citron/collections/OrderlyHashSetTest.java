@@ -80,6 +80,19 @@ public class OrderlyHashSetTest {
         testSet.add("C");
         assertTrue(testSet.removeAll(a1));
     }
+    @Test
+    public void addAllTest()
+    {
+
+        ArrayList<String> a1 = new ArrayList<>();
+        for(int i = 'A'; i < 'J'; i++)
+        {
+            a1.add("" + (char)i);
+        }
+        OrderlyHashSet<String> testSet = new OrderlyHashSet<>(10);
+        assertTrue(testSet.addAll(a1));
+        assertTrue(testSet.containsAll(a1));
+    }
 
 
 
