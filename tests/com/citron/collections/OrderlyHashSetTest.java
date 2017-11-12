@@ -29,7 +29,8 @@ public class OrderlyHashSetTest {
         {
             testSet.add("" + (char)i);
         }
-       assertTrue(testSet.contains("A")&&testSet.contains("B")&&testSet.contains("I"));
+
+        assertTrue(testSet.contains("A") && testSet.contains("B") && testSet.contains("I"));
         assertFalse(testSet.contains("S"));
     }
     @Test

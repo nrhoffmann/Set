@@ -84,7 +84,7 @@ public class OrderlyHashSet<E> implements Set<E>{
     public boolean add(E elt) {
         int binarySearchFeedbackVal = modifiedBinarySearch(elt);
 
-        if (binarySearchFeedbackVal < 0)
+        if (binarySearchFeedbackVal >= 0)
             return false;
 
         backingAL.add((-(binarySearchFeedbackVal+1) ), new SetItem<>(elt));
@@ -174,5 +174,6 @@ public class OrderlyHashSet<E> implements Set<E>{
         }
 
         return -(i) - 1;
+        // Mimics the return of Collections.binarySearch() when not found.
     }
 }
