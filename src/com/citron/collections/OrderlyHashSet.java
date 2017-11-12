@@ -43,29 +43,7 @@ public class OrderlyHashSet<E> implements Set<E>{
     @Override
     @SuppressWarnings("unchecked")
     public boolean contains(Object o) {
-        int i = potentialInsertionPoint(new SetItem<>((E) o));
-
-        if (i != -1) {
-            for (int j = i; j > -1; j--) {
-                SetItem<E> setItem = backingArr.get(i);
-                if (setItem.hashCode != o.hashCode())
-                    break;
-
-                if (o.equals(setItem.data))
-                    return true;
-            }
-
-            for (int j = i + 1; j < size(); j++) {
-                SetItem<E> setItem = backingArr.get(i);
-                if (setItem.hashCode != o.hashCode())
-                    break;
-
-                if (o.equals(setItem.data))
-                    return true;
-            }
-        }
-
-        return false;
+        return modifiedBinarySearch((E) o) > -1;
     }
 
     @Override
@@ -104,19 +82,20 @@ public class OrderlyHashSet<E> implements Set<E>{
 
     @Override
     public boolean add(E elt) {
-        SetItem<E> setItem = new SetItem<>(elt);
-        int binarySearchFeedbackVal = Collections.binarySearch(backingAL, setItem);
+        int binarySearchFeedbackVal = modifiedBinarySearch(elt);
 
-        if (binarySearchFeedbackVal >= 0) return false;//the set already has this elt
+        if (binarySearchFeedbackVal < 0)
+            return false;
 
-        backingAL.add((-(binarySearchFeedbackVal+1) ), setItem);
+        backingAL.add((-(binarySearchFeedbackVal+1) ), new SetItem<>(elt));
         return true;
     }
 
 
     @Override
+    @SuppressWarnings("unchecked")
     public boolean remove(Object o) {
-        int binarySearchFeedbackVal = Collections.binarySearch(backingAL, new SetItem<E>((E)o));
+        int binarySearchFeedbackVal = modifiedBinarySearch((E) o);
         if(binarySearchFeedbackVal < 0)
         {
             return false;
@@ -137,7 +116,7 @@ public class OrderlyHashSet<E> implements Set<E>{
 
     @Override
     public boolean addAll(Collection<? extends E> c) {
-        backingAL.ensureCapacity(c.size());
+        backingAL.ensureCapacity(c.size() + size());
         for(E elt: c)
         {
             add(elt);
@@ -166,5 +145,34 @@ public class OrderlyHashSet<E> implements Set<E>{
     @Override
     public void clear() {
         backingAL.clear();
+    }
+
+    private int modifiedBinarySearch(E data) {
+        SetItem<E> elt = new SetItem<>(data);
+        int binarySearchReturnVal = Collections.binarySearch(backingAL, elt);
+
+        if (binarySearchReturnVal < 0)
+            return binarySearchReturnVal;
+
+        int i;
+        for (i = binarySearchReturnVal; i > -1; i--) {
+            SetItem<E> nextElt = backingAL.get(i);
+            if (nextElt.hashCode != elt.hashCode)
+                break;
+
+            if (elt.data.equals(nextElt.data))
+                return i;
+        }
+
+        for (i = binarySearchReturnVal + 1; i < size(); i++) {
+            SetItem<E> nextElt = backingAL.get(i);
+            if (nextElt.hashCode != elt.hashCode)
+                break;
+
+            if (elt.data.equals(nextElt.data))
+                return i;
+        }
+
+        return -(i) - 1;
     }
 }
