@@ -43,7 +43,29 @@ public class OrderlyHashSet<E> implements Set<E>{
     @Override
     @SuppressWarnings("unchecked")
     public boolean contains(Object o) {
-        return potentialInsertionPoint(new SetItem<>((E) o)) == -1;
+        int i = potentialInsertionPoint(new SetItem<>((E) o));
+
+        if (i != -1) {
+            for (int j = i; j > -1; j--) {
+                SetItem<E> setItem = backingArr.get(i);
+                if (setItem.hashCode != o.hashCode())
+                    break;
+
+                if (o.equals(setItem.data))
+                    return true;
+            }
+
+            for (int j = i + 1; j < size(); j++) {
+                SetItem<E> setItem = backingArr.get(i);
+                if (setItem.hashCode != o.hashCode())
+                    break;
+
+                if (o.equals(setItem.data))
+                    return true;
+            }
+        }
+
+        return false;
     }
 
     @Override
@@ -85,7 +107,7 @@ public class OrderlyHashSet<E> implements Set<E>{
         SetItem<E> setItem = new SetItem<>(elt);
         int i = potentialInsertionPoint(setItem);
 
-        if (i < 0) return false;
+        if (i < 0) return false; // TODO wrong
 
         backingArr.add(i, setItem);
         return true;
