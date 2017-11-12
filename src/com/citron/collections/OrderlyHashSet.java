@@ -20,24 +20,24 @@ public class OrderlyHashSet<E> implements Set<E>{
         }
     }
 
-    private ArrayList<SetItem<E>> backingArr;
+    private ArrayList<SetItem<E>> backingAL;
 
     public OrderlyHashSet() {
-        backingArr = new ArrayList<>();
+        backingAL = new ArrayList<>();
     }
 
     public OrderlyHashSet(int initialCapacity){
-        backingArr = new ArrayList<>(initialCapacity);
+        backingAL = new ArrayList<>(initialCapacity);
     }
 
     @Override
     public int size() {
-        return backingArr.size();
+        return backingAL.size();
     }
 
     @Override
     public boolean isEmpty() {
-        return backingArr.isEmpty();
+        return backingAL.isEmpty();
     }
 
     @Override
@@ -71,7 +71,7 @@ public class OrderlyHashSet<E> implements Set<E>{
     @Override
     public Iterator<E> iterator() {
         return new Iterator<E>() {
-            Iterator<SetItem<E>> backingArrItr = backingArr.iterator();
+            Iterator<SetItem<E>> backingArrItr = backingAL.iterator();
 
             @Override
             public boolean hasNext() {
@@ -105,32 +105,44 @@ public class OrderlyHashSet<E> implements Set<E>{
     @Override
     public boolean add(E elt) {
         SetItem<E> setItem = new SetItem<>(elt);
-        int i = potentialInsertionPoint(setItem);
+        int binarySearchFeedbackVal = Collections.binarySearch(backingAL, setItem);
 
-        if (i < 0) return false; // TODO wrong
+        if (binarySearchFeedbackVal >= 0) return false;//the set already has this elt
 
-        backingArr.add(i, setItem);
+        backingAL.add((-(binarySearchFeedbackVal+1) ), setItem);
         return true;
     }
 
-    private int potentialInsertionPoint(SetItem<E> setItem) {
-        int binarySearchFeedbackVal = Collections.binarySearch(backingArr, setItem);
-        return binarySearchFeedbackVal >= 0 ? -1 : -(binarySearchFeedbackVal + 1);
-    }
 
     @Override
     public boolean remove(Object o) {
-        return false;
+        int binarySearchFeedbackVal = Collections.binarySearch(backingAL, new SetItem<E>((E)o));
+        if(binarySearchFeedbackVal < 0)
+        {
+            return false;
+        }
+        backingAL.remove(binarySearchFeedbackVal);
+        return true;
     }
 
     @Override
     public boolean containsAll(Collection<?> c) {
-        return false;
+        for(Object o : c)
+        {
+            if(!contains(o))
+                return false;
+        }
+        return true;
     }
 
     @Override
     public boolean addAll(Collection<? extends E> c) {
-        return false;
+        backingAL.ensureCapacity(c.size());
+        for(E elt: c)
+        {
+            add(elt);
+        }
+        return true;
     }
 
     @Override
@@ -140,11 +152,19 @@ public class OrderlyHashSet<E> implements Set<E>{
 
     @Override
     public boolean removeAll(Collection<?> c) {
-        return false;
+        boolean changed = false;
+        for(Object o:c)
+        {
+            if(remove(o))
+            {
+                changed = true;
+            }
+        }
+        return changed;
     }
 
     @Override
     public void clear() {
-        backingArr.clear();
+        backingAL.clear();
     }
 }
