@@ -142,8 +142,10 @@ public class OrderlyHashSet<E> implements Set<E>{
 
         boolean changed = false;
         while (itr.hasNext())
-            if (changed |= !set.contains(itr.next()))
+            if (set.contains(itr.next())) {
+                changed |= true;
                 itr.remove();
+            }
 
         return changed;
     }
