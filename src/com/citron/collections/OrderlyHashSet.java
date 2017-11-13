@@ -60,6 +60,11 @@ public class OrderlyHashSet<E> implements Set<E>{
             public E next() {
                 return backingArrItr.next().data;
             }
+
+            @Override
+            public void remove() {
+                backingArrItr.remove();
+            }
         };
     }
 
@@ -125,8 +130,22 @@ public class OrderlyHashSet<E> implements Set<E>{
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public boolean retainAll(Collection<?> c) {
-        return false;
+        Iterator<E> itr = iterator();
+
+        HashSet<E> set;
+        if (c instanceof HashSet<?>)
+            set = (HashSet<E>) c;
+        else
+            set = new HashSet<>((Collection<E>) c);
+
+        boolean changed = false;
+        while (itr.hasNext())
+            if (changed |= !set.contains(itr.next()))
+                itr.remove();
+
+        return changed;
     }
 
     @Override
